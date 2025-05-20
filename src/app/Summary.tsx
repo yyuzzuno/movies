@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 // TODO: genreRecordについて動的に対応する
 const genreColorRecord: Record<string, string> = {
   アクション: "#FF5733",
@@ -44,16 +46,13 @@ export const Summary = ({
         fontWeight: 400,
       }}
     >
-      {/* TODO: next/imageを使用する */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         alt={`${title}のサムネイル`}
-        src={`https://image.tmdb.org/t/p/w500${thumbnail_path}`}
+        width={249}
+        height={329}
+        src={`/img${thumbnail_path}`}
         style={{
-          background: "#ddd",
           borderRadius: "4px",
-          width: "100%",
-          aspectRatio: "3/4",
         }}
       />
       <span>{title}</span>
