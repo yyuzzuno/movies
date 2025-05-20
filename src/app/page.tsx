@@ -1,97 +1,139 @@
 "use client";
 
-import Image from "next/image";
-import styles from "./page.module.css";
+import React, { useState } from "react";
+import { dummy_response_movies } from "./dummies";
+import { Summary } from "./Summary";
+
+// TODO: APIからジャンルデータを取得してレコードを作成する
+// reference: https://developer.themoviedb.org/reference/genre-movie-list
+const genreRecord: Record<number, string> = {
+  28: "アクション",
+  12: "アドベンチャー",
+  16: "アニメーション",
+  35: "コメディ",
+  80: "犯罪",
+  99: "ドキュメンタリー",
+  18: "ドラマ",
+  10751: "ファミリー",
+  14: "ファンタジー",
+  36: "履歴",
+  27: "ホラー",
+  10402: "音楽",
+  9648: "謎",
+  10749: "ロマンス",
+  878: "サイエンスフィクション",
+  10770: "テレビ映画",
+  53: "スリラー",
+  10752: "戦争",
+  37: "西洋",
+};
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [keyword, setKeyword] = useState("");
+  const [year, setYear] = useState("");
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  return (
+    <div
+      style={{
+        margin: "64px 0px",
+        minHeight: "100vh",
+        background: "#fff",
+        justifySelf: "center",
+      }}
+    >
+      <h1 style={{ fontSize: "2rem", fontWeight: 400, marginBottom: "48px" }}>
+        Search Movie App
+      </h1>
+      <div
+        style={{
+          display: "flex",
+          gap: "48px",
+          marginBottom: "48px",
+        }}
+      >
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "240px" }}
+        >
+          <label
+            htmlFor="keyword"
+            style={{ marginBottom: "8px", fontSize: "1rem" }}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+            Keyword
+          </label>
+          <input
+            id="keyword"
+            type="text"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            style={{
+              padding: "12px",
+              border: "none",
+              background: "#f5f7f8",
+              borderRadius: "2px",
+              fontSize: "1rem",
+            }}
+            placeholder="Enter keyword"
+          />
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "240px" }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+          <label
+            htmlFor="year"
+            style={{ marginBottom: "8px", fontSize: "1rem" }}
+          >
+            Release year
+          </label>
+          <input
+            id="year"
+            type="text"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            style={{
+              padding: "12px",
+              border: "none",
+              background: "#f5f7f8",
+              borderRadius: "2px",
+              fontSize: "1rem",
+            }}
+            placeholder="e.g. 2024"
           />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        </div>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "32px",
+          maxWidth: "1200px",
+          marginBottom: "48px",
+        }}
+      >
+        {dummy_response_movies.results.map((movie) => (
+          <Summary
+            key={JSON.stringify(movie)}
+            title={movie.title}
+            thumbnail_path={movie.poster_path}
+            release_date={movie.release_date}
+            genres={movie.genre_ids.map((id) => genreRecord[id])}
+          />
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <button
+          style={{
+            padding: "20px 0",
+            width: "280px",
+            background: "#f5f7f8",
+            border: "none",
+            borderRadius: "2px",
+            fontSize: "1.1rem",
+            cursor: "pointer",
+          }}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          More Read
+        </button>
+      </div>
     </div>
   );
 }
