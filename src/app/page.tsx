@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { dummy_response_movies } from "./dummies";
 import { Summary } from "./Summary";
+import { useFetchMovies } from "./useMovies";
 
 // TODO: APIからジャンルデータを取得してレコードを作成する
 // reference: https://developer.themoviedb.org/reference/genre-movie-list
@@ -31,6 +31,11 @@ const genreRecord: Record<number, string> = {
 export default function Home() {
   const [keyword, setKeyword] = useState("");
   const [year, setYear] = useState("");
+  const [to, setTo] = useState(1);
+
+  // TODO: isLoading, isErrorをハンドル
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { movies, isLoading, isError } = useFetchMovies(to);
 
   return (
     <div
@@ -109,11 +114,12 @@ export default function Home() {
           marginBottom: "48px",
         }}
       >
-        {dummy_response_movies.results.map((movie) => (
+        {movies.map((movie) => (
           <Summary
             key={JSON.stringify(movie)}
             title={movie.title}
-            thumbnail_path={movie.poster_path}
+            /* TODO: null対応 */
+            thumbnail_path={movie.poster_path!}
             release_date={movie.release_date}
             genres={movie.genre_ids.map((id) => genreRecord[id])}
           />
@@ -121,6 +127,9 @@ export default function Home() {
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <button
+          onClick={() => {
+            setTo((prev) => prev + 1);
+          }}
           style={{
             padding: "20px 0",
             width: "280px",
