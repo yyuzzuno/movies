@@ -32,10 +32,19 @@ export default function Home() {
   const [keyword, setKeyword] = useState("");
   const [year, setYear] = useState("");
   const [to, setTo] = useState(1);
+  const [searched, setSearched] = useState(false);
 
-  // TODO: isLoading, isErrorをハンドル
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { movies, isLoading, isError } = useFetchMovies(to);
+  // useFetchMoviesをキーワード・年で呼び出す
+  const { movies, isLoading, isError } = useFetchMovies({ to, keyword, year });
+
+  // 年プルダウン用
+  const years = ["", "2020", "2021", "2022", "2023", "2024"];
+
+  // 検索ボタン押下時
+  const handleSearch = () => {
+    setSearched(true);
+    setTo(1);
+  };
 
   return (
     <div
@@ -56,13 +65,8 @@ export default function Home() {
           marginBottom: "48px",
         }}
       >
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "240px" }}
-        >
-          <label
-            htmlFor="keyword"
-            style={{ marginBottom: "8px", fontSize: "1rem" }}
-          >
+        <div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
+          <label htmlFor="keyword" style={{ marginBottom: "8px", fontSize: "1rem" }}>
             Keyword
           </label>
           <input
@@ -80,18 +84,12 @@ export default function Home() {
             placeholder="Enter keyword"
           />
         </div>
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "240px" }}
-        >
-          <label
-            htmlFor="year"
-            style={{ marginBottom: "8px", fontSize: "1rem" }}
-          >
+        <div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
+          <label htmlFor="year" style={{ marginBottom: "8px", fontSize: "1rem" }}>
             Release year
           </label>
-          <input
+          <select
             id="year"
-            type="text"
             value={year}
             onChange={(e) => setYear(e.target.value)}
             style={{
@@ -101,10 +99,44 @@ export default function Home() {
               borderRadius: "2px",
               fontSize: "1rem",
             }}
-            placeholder="e.g. 2024"
-          />
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y === "" ? "選択してください" : y}
+              </option>
+            ))}
+          </select>
         </div>
+        <button
+          onClick={handleSearch}
+          style={{
+            padding: "12px 24px",
+            background: "#0070f3",
+            color: "#fff",
+            border: "none",
+            borderRadius: "2px",
+            fontSize: "1rem",
+            height: "48px",
+            alignSelf: "flex-end",
+            cursor: "pointer",
+          }}
+        >
+          検索
+        </button>
       </div>
+      {/* 検索前 */}
+      {!searched && (
+        <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+          キーワードを入力して検索してください
+        </div>
+      )}
+      {/* 検索後・0件 */}
+      {searched && !isLoading && movies.length === 0 && (
+        <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+          該当する映画がありませんでした
+        </div>
+      )}
+      {/* 検索結果 */}
       <div
         style={{
           display: "grid",
@@ -118,31 +150,32 @@ export default function Home() {
           <Summary
             key={JSON.stringify(movie)}
             title={movie.title}
-            /* TODO: null対応 */
             thumbnail_path={movie.poster_path!}
             release_date={movie.release_date}
             genres={movie.genre_ids.map((id) => genreRecord[id])}
           />
         ))}
       </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <button
-          onClick={() => {
-            setTo((prev) => prev + 1);
-          }}
-          style={{
-            padding: "20px 0",
-            width: "280px",
-            background: "#f5f7f8",
-            border: "none",
-            borderRadius: "2px",
-            fontSize: "1.1rem",
-            cursor: "pointer",
-          }}
-        >
-          More Read
-        </button>
-      </div>
+      {searched && movies.length > 0 && (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            onClick={() => {
+              setTo((prev) => prev + 1);
+            }}
+            style={{
+              padding: "20px 0",
+              width: "280px",
+              background: "#f5f7f8",
+              border: "none",
+              borderRadius: "2px",
+              fontSize: "1.1rem",
+              cursor: "pointer",
+            }}
+          >
+            More Read
+          </button>
+        </div>
+      )}
     </div>
   );
 }
