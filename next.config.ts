@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         source: "/img/:path*",
         destination: "https://image.tmdb.org/t/p/w500/:path*",
       },
+      {
+        source: "/movie",
+        destination: "https://api.themoviedb.org/3/discover/movie",
+      },
     ];
   },
 };
