@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Summary } from "./Summary";
 import { useFetchMovies } from "./useMovies";
 
@@ -28,23 +28,34 @@ const genreRecord: Record<number, string> = {
   37: "西洋",
 };
 
+interface queryParams {
+  keyword: string;
+  year: string;
+}
+
 export default function Home() {
-  const [keyword, setKeyword] = useState("");
-  const [year, setYear] = useState("");
-  const [to, setTo] = useState(1);
-  const [searched, setSearched] = useState(false);
+  const keyword = useRef<HTMLInputElement>(null);
+  const year = useRef<HTMLSelectElement>(null);
+  const [params, setParams] = useState<queryParams | null>(null);
+  const [to, setTo] = useState(0);
 
   // useFetchMoviesをキーワード・年で呼び出す
-  const { movies, isLoading, isError } = useFetchMovies({ to, keyword, year });
+  const { movies, isLoading, isError } = useFetchMovies({
+    to,
+    ...(params ?? { keyword: "", year: "" }),
+  });
 
   // 年プルダウン用
-  const years = ["", "2020", "2021", "2022", "2023", "2024"];
+  const years = ["2020", "2021", "2022", "2023", "2024"];
 
   // 検索ボタン押下時
-  const handleSearch = () => {
-    setSearched(true);
+  const handleSearch = useCallback(() => {
+    const keywordValue = keyword.current?.value;
+    const yearValue = year.current?.value;
+    if (keywordValue === undefined || yearValue === undefined) return;
+    setParams({ keyword: keywordValue, year: yearValue });
     setTo(1);
-  };
+  }, [setParams]);
 
   return (
     <div
@@ -65,15 +76,19 @@ export default function Home() {
           marginBottom: "48px",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
-          <label htmlFor="keyword" style={{ marginBottom: "8px", fontSize: "1rem" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "240px" }}
+        >
+          <label
+            htmlFor="keyword"
+            style={{ marginBottom: "8px", fontSize: "1rem" }}
+          >
             Keyword
           </label>
           <input
+            ref={keyword}
             id="keyword"
             type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
             style={{
               padding: "12px",
               border: "none",
@@ -84,14 +99,19 @@ export default function Home() {
             placeholder="Enter keyword"
           />
         </div>
-        <div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
-          <label htmlFor="year" style={{ marginBottom: "8px", fontSize: "1rem" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "240px" }}
+        >
+          <label
+            htmlFor="year"
+            style={{ marginBottom: "8px", fontSize: "1rem" }}
+          >
             Release year
           </label>
           <select
             id="year"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
+            ref={year}
+            defaultValue="2020"
             style={{
               padding: "12px",
               border: "none",
@@ -125,38 +145,40 @@ export default function Home() {
         </button>
       </div>
       {/* 検索前 */}
-      {!searched && (
+      {params === undefined && (
         <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
           キーワードを入力して検索してください
         </div>
       )}
       {/* 検索後・0件 */}
-      {searched && !isLoading && movies.length === 0 && (
+      {!isLoading && movies.length === 0 && (
         <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
           該当する映画がありませんでした
         </div>
       )}
       {/* 検索結果 */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "32px",
-          maxWidth: "1200px",
-          marginBottom: "48px",
-        }}
-      >
-        {movies.map((movie) => (
-          <Summary
-            key={JSON.stringify(movie)}
-            title={movie.title}
-            thumbnail_path={movie.poster_path!}
-            release_date={movie.release_date}
-            genres={movie.genre_ids.map((id) => genreRecord[id])}
-          />
-        ))}
-      </div>
-      {searched && movies.length > 0 && (
+      {0 < to && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "32px",
+            maxWidth: "1200px",
+            marginBottom: "48px",
+          }}
+        >
+          {movies.map((movie) => (
+            <Summary
+              key={JSON.stringify(movie)}
+              title={movie.title}
+              thumbnail_path={movie.poster_path!}
+              release_date={movie.release_date}
+              genres={movie.genre_ids.map((id) => genreRecord[id])}
+            />
+          ))}
+        </div>
+      )}
+      {movies.length > 0 && (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button
             onClick={() => {
