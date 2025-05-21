@@ -5,13 +5,13 @@ type page = number;
 const nMoviesInPage = 20;
 
 export const useFetchMovies = ({
-  to = 1,
-  keyword = "",
-  year = "",
+  to,
+  keyword,
+  year,
 }: {
-  to?: number;
-  keyword?: string;
-  year?: string;
+  to: number;
+  keyword: string;
+  year: string;
 }): MoviesProps => {
   const [movies, setMovies] = useState<Array<Movie>>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -23,9 +23,7 @@ export const useFetchMovies = ({
     setIsLoading(true);
     try {
       // クエリパラメータを組み立て
-      let url = `/movie?include_adult=false&include_video=false&language=ja-JP&page=${i}&sort_by=popularity.desc`;
-      if (keyword) url += `&query=${encodeURIComponent(keyword)}`;
-      if (year) url += `&primary_release_year=${year}`;
+      const url = `/movie?include_adult=false&language=ja-JP&page=${i}&query=${encodeURIComponent(keyword)}&year=${year}`;
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
