@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/movie",
-        destination: "https://api.themoviedb.org/3/discover/movie",
+        destination: "https://api.themoviedb.org/3/search/movie",
       },
     ];
   },
