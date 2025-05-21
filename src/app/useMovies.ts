@@ -19,7 +19,7 @@ export const useFetchMovies = ({
 
   const controller = useMemo(() => new AbortController(), []);
 
-  const fetchMovies = async (i: number) => {
+  const fetchMovies = async (i: page) => {
     setIsLoading(true);
     try {
       // クエリパラメータを組み立て
@@ -45,6 +45,7 @@ export const useFetchMovies = ({
   }, [keyword, year]);
 
   useEffect(() => {
+    if (to === 0 || keyword === "" || year === "") return;
     const offset = movies.length / nMoviesInPage;
     const page_numbers = Array.from(
       { length: to - offset },
