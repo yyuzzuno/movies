@@ -54,7 +54,14 @@ const Searcher = () => {
   const handleSearch = useCallback(() => {
     const keywordValue = keyword.current?.value;
     const yearValue = year.current?.value;
-    if (keywordValue === undefined || yearValue === undefined) return;
+    if (
+      keywordValue === undefined ||
+      yearValue === undefined ||
+      keywordValue === ""
+    ) {
+      setParams(null);
+      return;
+    }
     setParams({ keyword: keywordValue, year: yearValue });
   }, [setParams]);
 
