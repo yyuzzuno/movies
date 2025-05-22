@@ -1,6 +1,8 @@
 import { MoviesResponse } from "./types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+const nMoviesPerPage = 20;
+
 export const useFetchMovies = ({
   keyword,
   year,
@@ -16,6 +18,8 @@ export const useFetchMovies = ({
     return data.results;
   };
 
+  const enabled = keyword !== "" && year !== "";
+
   const {
     data,
     error,
@@ -28,12 +32,9 @@ export const useFetchMovies = ({
     queryKey: ["movies", keyword, year],
     queryFn: fetchMovies,
     initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => {
-      if (lastPage !== undefined) {
-        return pages.length + 1;
-      }
-      return undefined;
-    },
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.length === nMoviesPerPage ? pages.length + 1 : undefined,
+    enabled,
   });
 
   return {
@@ -44,5 +45,6 @@ export const useFetchMovies = ({
     isFetching,
     isFetchingNextPage,
     status,
+    enabled,
   };
 };
