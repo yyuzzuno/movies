@@ -39,7 +39,7 @@ export const Summary = ({
   genres,
 }: MovieProps) => {
   return (
-    <div className="flex flex-col gap-2 text-[1.2rem] font-normal">
+    <div className="flex flex-col gap-2 text-[1.2rem] font-normal items-center">
       <Image
         alt={`${title}のサムネイル`}
         width={249}
@@ -49,7 +49,7 @@ export const Summary = ({
       />
       <span>{title}</span>
       <span>{release_date}</span>
-      <div className="flex gap-2 flex-wrap mt-2">
+      <div className="flex gap-2 flex-wrap mt-2 justify-center">
         {genres.map((genre) => (
           <span
             key={genre}
