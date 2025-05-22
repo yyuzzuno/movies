@@ -39,8 +39,10 @@ export const Searcher = () => {
   }, [setParams]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center py-16">
-      <h1 className="text-3xl font-normal mb-12">Search Movie App</h1>
+    <div
+      className="min-h-screen bg-transparent flex flex-col items-center py-16"
+      style={{ backdropFilter: params === null ? undefined : "blur(20px)" }}
+    >
       <div className="flex flex-col sm:flex-row gap-12 mb-12">
         <div className="flex flex-col w-60">
           <label htmlFor="keyword" className="mb-2 text-base">
@@ -73,7 +75,7 @@ export const Searcher = () => {
         </div>
         <button
           onClick={handleSearch}
-          className="whitespace-nowrap px-6 py-3 bg-blue-600 text-white rounded text-base h-12 self-end hover:bg-blue-700 transition"
+          className="whitespace-nowrap px-6 py-3 text-white rounded text-base h-12 self-end bg-blur-lg border border-white/40 border-r-white/20 border-b-white/20 rounded-md hover:bg-white/10 transition"
         >
           検索
         </button>
@@ -87,7 +89,7 @@ export const Searcher = () => {
       {/* 検索後・0件 */}
       {data !== undefined && data.pages[0].length !== 0 ? (
         <div>
-          <div className="grid grid-cols-4 gap-8 mb-12 w-full">
+          <div className="grid grid-cols-4 gap-2 mb-12 w-full">
             {data.pages.flat().map((movie) => (
               <Summary
                 key={JSON.stringify(movie)}
@@ -106,7 +108,7 @@ export const Searcher = () => {
             <div className="flex justify-center">
               <button
                 onClick={() => fetchNextPage()}
-                className="py-5 w-72 bg-gray-100 rounded text-lg hover:bg-gray-200 transition"
+                className="py-5 w-72 rounded text-lg  bg-blur-lg border border-white/40 border-r-white/20 border-b-white/20 rounded-md hover:bg-white/10 transition color-white"
               >
                 More Read
               </button>
