@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export default function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/movie") {
+  if (request.nextUrl.pathname.startsWith("/tmdb")) {
     const requestHeaders = new Headers();
     requestHeaders.set(
       "Authorization",
