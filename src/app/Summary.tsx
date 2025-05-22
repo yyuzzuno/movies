@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 // TODO: genreRecordについて動的に対応する
-const genreColorRecord: Record<string, string> = {
+const genreColorRecord: Record<string, string | undefined> = {
   アクション: "#FF5733",
   アドベンチャー: "#33FF57",
   アニメーション: "#3357FF",
@@ -22,6 +22,8 @@ const genreColorRecord: Record<string, string> = {
   戦争: "#FF33A1",
   西洋: "#FF8C33",
 };
+
+const defaultGenreColor = "#F1A10D";
 
 interface MovieProps {
   title: string;
@@ -52,7 +54,7 @@ export const Summary = ({
           <span
             key={genre}
             className="text-white px-2 py-1 rounded text-xs"
-            style={{ background: genreColorRecord[genre] }}
+            style={{ background: genreColorRecord[genre] ?? defaultGenreColor }}
           >
             {genre}
           </span>
