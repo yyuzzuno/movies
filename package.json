@@ -21,6 +21,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.27.0",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -29,11 +30,11 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react-compiler": "19.0.0-beta-af1b7da-20250417",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "modern-css-reset": "^1.4.0",
     "prettier": "3.5.3",
+    "tailwindcss": "^4",
     "typescript": "^5",
     "typescript-eslint": "^8.32.1",
-    "wrangler": "^4.15.2",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "wrangler": "^4.15.2"
   }
 }
