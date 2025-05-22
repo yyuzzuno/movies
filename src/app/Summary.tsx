@@ -37,44 +37,22 @@ export const Summary = ({
   genres,
 }: MovieProps) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-        fontSize: "1.2rem",
-        fontWeight: 400,
-      }}
-    >
+    <div className="flex flex-col gap-2 text-[1.2rem] font-normal">
       <Image
         alt={`${title}のサムネイル`}
         width={249}
         height={329}
         src={`/img${thumbnail_path}`}
-        style={{
-          borderRadius: "4px",
-        }}
+        className="rounded"
       />
       <span>{title}</span>
       <span>{release_date}</span>
-      <div
-        style={{
-          display: "flex",
-          gap: "8px",
-          flexWrap: "wrap",
-          marginTop: "8px",
-        }}
-      >
+      <div className="flex gap-2 flex-wrap mt-2">
         {genres.map((genre) => (
           <span
             key={genre}
-            style={{
-              background: genreColorRecord[genre],
-              color: "#fff",
-              padding: "4px 8px",
-              borderRadius: "4px",
-              fontSize: "0.8rem",
-            }}
+            className="text-white px-2 py-1 rounded text-xs"
+            style={{ background: genreColorRecord[genre] }}
           >
             {genre}
           </span>

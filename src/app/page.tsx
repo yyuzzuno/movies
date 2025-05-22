@@ -54,72 +54,42 @@ const Searcher = () => {
   const handleSearch = useCallback(() => {
     const keywordValue = keyword.current?.value;
     const yearValue = year.current?.value;
-    if (keywordValue === undefined || yearValue === undefined) return;
+    if (
+      keywordValue === undefined ||
+      yearValue === undefined ||
+      keywordValue === ""
+    ) {
+      setParams(null);
+      return;
+    }
     setParams({ keyword: keywordValue, year: yearValue });
   }, [setParams]);
 
   return (
-    <div
-      style={{
-        margin: "64px 0px",
-        minHeight: "100vh",
-        background: "#fff",
-        justifySelf: "center",
-      }}
-    >
-      <h1 style={{ fontSize: "2rem", fontWeight: 400, marginBottom: "48px" }}>
-        Search Movie App
-      </h1>
-      <div
-        style={{
-          display: "flex",
-          gap: "48px",
-          marginBottom: "48px",
-        }}
-      >
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "240px" }}
-        >
-          <label
-            htmlFor="keyword"
-            style={{ marginBottom: "8px", fontSize: "1rem" }}
-          >
+    <div className="min-h-screen bg-white flex flex-col items-center py-16">
+      <h1 className="text-3xl font-normal mb-12">Search Movie App</h1>
+      <div className="flex gap-12 mb-12">
+        <div className="flex flex-col w-60">
+          <label htmlFor="keyword" className="mb-2 text-base">
             Keyword
           </label>
           <input
             ref={keyword}
             id="keyword"
             type="text"
-            style={{
-              padding: "12px",
-              border: "none",
-              background: "#f5f7f8",
-              borderRadius: "2px",
-              fontSize: "1rem",
-            }}
+            className="p-3 bg-gray-100 rounded text-base border-none outline-none"
             placeholder="Enter keyword"
           />
         </div>
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "240px" }}
-        >
-          <label
-            htmlFor="year"
-            style={{ marginBottom: "8px", fontSize: "1rem" }}
-          >
+        <div className="flex flex-col w-60">
+          <label htmlFor="year" className="mb-2 text-base">
             Release year
           </label>
           <select
             id="year"
             ref={year}
             defaultValue="2020"
-            style={{
-              padding: "12px",
-              border: "none",
-              background: "#f5f7f8",
-              borderRadius: "2px",
-              fontSize: "1rem",
-            }}
+            className="p-3 bg-gray-100 rounded text-base border-none outline-none"
           >
             {years.map((y) => (
               <option key={y} value={y}>
@@ -130,39 +100,21 @@ const Searcher = () => {
         </div>
         <button
           onClick={handleSearch}
-          style={{
-            padding: "12px 24px",
-            background: "#0070f3",
-            color: "#fff",
-            border: "none",
-            borderRadius: "2px",
-            fontSize: "1rem",
-            height: "48px",
-            alignSelf: "flex-end",
-            cursor: "pointer",
-          }}
+          className="px-6 py-3 bg-blue-600 text-white rounded text-base h-12 self-end hover:bg-blue-700 transition"
         >
           検索
         </button>
       </div>
       {/* 検索前 */}
       {params === null && (
-        <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+        <div className="my-8 text-center text-gray-400">
           キーワードを入力して検索してください
         </div>
       )}
       {/* 検索後・0件 */}
       {data !== undefined && data.pages[0].length !== 0 ? (
         <div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "32px",
-              maxWidth: "1200px",
-              marginBottom: "48px",
-            }}
-          >
+          <div className="grid grid-cols-4 gap-8 max-w-5xl mb-12">
             {data.pages.flat().map((movie) => (
               <Summary
                 key={JSON.stringify(movie)}
@@ -173,20 +125,11 @@ const Searcher = () => {
               />
             ))}
           </div>
-
           {hasNextPage && (
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div className="flex justify-center">
               <button
                 onClick={() => fetchNextPage()}
-                style={{
-                  padding: "20px 0",
-                  width: "280px",
-                  background: "#f5f7f8",
-                  border: "none",
-                  borderRadius: "2px",
-                  fontSize: "1.1rem",
-                  cursor: "pointer",
-                }}
+                className="py-5 w-72 bg-gray-100 rounded text-lg hover:bg-gray-200 transition"
               >
                 More Read
               </button>
@@ -196,7 +139,7 @@ const Searcher = () => {
       ) : (
         enabled &&
         !isFetching && (
-          <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+          <div className="my-8 text-center text-gray-400">
             該当する映画がありませんでした
           </div>
         )
