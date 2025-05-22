@@ -42,9 +42,10 @@ const Searcher = () => {
   const year = useRef<HTMLSelectElement>(null);
   const [params, setParams] = useState<queryParams | null>(null);
   // useFetchMoviesをキーワード・年で呼び出す
-  const { data, fetchNextPage, hasNextPage, isFetching } = useFetchMovies({
-    ...(params ?? { keyword: "", year: "" }),
-  });
+  const { data, fetchNextPage, hasNextPage, isFetching, enabled } =
+    useFetchMovies({
+      ...(params ?? { keyword: "", year: "" }),
+    });
 
   // 年プルダウン用
   const years = ["2020", "2021", "2022", "2023", "2024"];
@@ -145,19 +146,13 @@ const Searcher = () => {
         </button>
       </div>
       {/* 検索前 */}
-      {params === undefined && (
+      {params === null && (
         <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
           キーワードを入力して検索してください
         </div>
       )}
       {/* 検索後・0件 */}
-      {data === undefined ? (
-        !isFetching && (
-          <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
-            該当する映画がありませんでした
-          </div>
-        )
-      ) : (
+      {data !== undefined && data.pages[0].length !== 0 ? (
         <div>
           <div
             style={{
@@ -198,6 +193,13 @@ const Searcher = () => {
             </div>
           )}
         </div>
+      ) : (
+        enabled &&
+        !isFetching && (
+          <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+            該当する映画がありませんでした
+          </div>
+        )
       )}
     </div>
   );
