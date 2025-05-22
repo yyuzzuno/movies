@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Summary } from "./Summary";
 import { useFetchMovies } from "./useMovies";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // TODO: APIからジャンルデータを取得してレコードを作成する
 // reference: https://developer.themoviedb.org/reference/genre-movie-list
@@ -28,14 +29,33 @@ const genreRecord: Record<number, string> = {
   37: "西洋",
 };
 
-export default function Home() {
-  const [keyword, setKeyword] = useState("");
-  const [year, setYear] = useState("");
-  const [to, setTo] = useState(1);
+interface queryParams {
+  keyword: string;
+  year: string;
+}
 
-  // TODO: isLoading, isErrorをハンドル
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { movies, isLoading, isError } = useFetchMovies(to);
+// Create a client
+const queryClient = new QueryClient();
+
+const Searcher = () => {
+  const keyword = useRef<HTMLInputElement>(null);
+  const year = useRef<HTMLSelectElement>(null);
+  const [params, setParams] = useState<queryParams | null>(null);
+  // useFetchMoviesをキーワード・年で呼び出す
+  const { data, fetchNextPage, hasNextPage, isFetching } = useFetchMovies({
+    ...(params ?? { keyword: "", year: "" }),
+  });
+
+  // 年プルダウン用
+  const years = ["2020", "2021", "2022", "2023", "2024"];
+
+  // 検索ボタン押下時
+  const handleSearch = useCallback(() => {
+    const keywordValue = keyword.current?.value;
+    const yearValue = year.current?.value;
+    if (keywordValue === undefined || yearValue === undefined) return;
+    setParams({ keyword: keywordValue, year: yearValue });
+  }, [setParams]);
 
   return (
     <div
@@ -66,10 +86,9 @@ export default function Home() {
             Keyword
           </label>
           <input
+            ref={keyword}
             id="keyword"
             type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
             style={{
               padding: "12px",
               border: "none",
@@ -89,11 +108,10 @@ export default function Home() {
           >
             Release year
           </label>
-          <input
+          <select
             id="year"
-            type="text"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
+            ref={year}
+            defaultValue="2020"
             style={{
               padding: "12px",
               border: "none",
@@ -101,48 +119,96 @@ export default function Home() {
               borderRadius: "2px",
               fontSize: "1rem",
             }}
-            placeholder="e.g. 2024"
-          />
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y === "" ? "選択してください" : y}
+              </option>
+            ))}
+          </select>
         </div>
-      </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "32px",
-          maxWidth: "1200px",
-          marginBottom: "48px",
-        }}
-      >
-        {movies.map((movie) => (
-          <Summary
-            key={JSON.stringify(movie)}
-            title={movie.title}
-            /* TODO: null対応 */
-            thumbnail_path={movie.poster_path!}
-            release_date={movie.release_date}
-            genres={movie.genre_ids.map((id) => genreRecord[id])}
-          />
-        ))}
-      </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
         <button
-          onClick={() => {
-            setTo((prev) => prev + 1);
-          }}
+          onClick={handleSearch}
           style={{
-            padding: "20px 0",
-            width: "280px",
-            background: "#f5f7f8",
+            padding: "12px 24px",
+            background: "#0070f3",
+            color: "#fff",
             border: "none",
             borderRadius: "2px",
-            fontSize: "1.1rem",
+            fontSize: "1rem",
+            height: "48px",
+            alignSelf: "flex-end",
             cursor: "pointer",
           }}
         >
-          More Read
+          検索
         </button>
       </div>
+      {/* 検索前 */}
+      {params === undefined && (
+        <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+          キーワードを入力して検索してください
+        </div>
+      )}
+      {/* 検索後・0件 */}
+      {data === undefined ? (
+        !isFetching && (
+          <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+            該当する映画がありませんでした
+          </div>
+        )
+      ) : (
+        <div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "32px",
+              maxWidth: "1200px",
+              marginBottom: "48px",
+            }}
+          >
+            {data.pages.flat().map((movie) => (
+              <Summary
+                key={JSON.stringify(movie)}
+                title={movie.title}
+                thumbnail_path={movie.poster_path!}
+                release_date={movie.release_date}
+                genres={movie.genre_ids.map((id) => genreRecord[id])}
+              />
+            ))}
+          </div>
+
+          {hasNextPage && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button
+                onClick={() => fetchNextPage()}
+                style={{
+                  padding: "20px 0",
+                  width: "280px",
+                  background: "#f5f7f8",
+                  border: "none",
+                  borderRadius: "2px",
+                  fontSize: "1.1rem",
+                  cursor: "pointer",
+                }}
+              >
+                More Read
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
+  );
+};
+
+export default function Home() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <main>
+        <Searcher />
+      </main>
+    </QueryClientProvider>
   );
 }
