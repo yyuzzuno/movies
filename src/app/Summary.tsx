@@ -49,7 +49,7 @@ export const Summary = ({
 }: MovieProps) => {
   const { year, date } = formatDate(release_date);
   return (
-    <div className="flex flex-col gap-2 text-[1.2rem] font-normal items-center">
+    <div className="p-[8px] flex flex-col gap-2 text-[1.2rem] font-normal items-center border border-white/40 border-r-white/20 border-b-white/20 rounded-md">
       <Image
         alt={`${title}のサムネイル`}
         width={249}
@@ -57,8 +57,10 @@ export const Summary = ({
         src={`https://image.tmdb.org/t/p/w500/${thumbnail_path}`}
         className="rounded"
       />
-      <span className="max-w-full break-words text-center">{title}</span>
-      <div className="flex flex-col gap-2 text-sm md:text-base md:flex-row items-center">
+      <span className="sign-four max-w-full break-words text-center">
+        {title}
+      </span>
+      <div className="sign-four flex flex-col gap-2 text-sm md:text-base md:flex-row items-center">
         <span>{year}</span>
         <span className="whitespace-nowrap">{date}</span>
       </div>

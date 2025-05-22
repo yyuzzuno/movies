@@ -13,8 +13,78 @@
 }
 
 body {
-  background: var(--background);
+  background-image: url("/Gemini_Generated_Image_rmud7qrmud7qrmud.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: auto 100%;
+  background-position-x: center;
+  background-color: #080c14;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  margin: 0 32px;
+}
+
+.sign-four {
+  line-height: 1.1rem;
+  -webkit-transform: matrix3d(
+    0.77,
+    0,
+    -0.64,
+    -0.001,
+    0,
+    1,
+    0,
+    0,
+    0.64,
+    0,
+    0.77,
+    0,
+    0,
+    0,
+    0,
+    1
+  );
+  color: #f0d6de;
+  font-family: clipneon;
+  margin-right: 2vw;
+  transform: matrix3d(
+    0.77,
+    0,
+    -0.64,
+    -0.001,
+    0,
+    1,
+    0,
+    0,
+    0.64,
+    0,
+    0.77,
+    0,
+    0,
+    0,
+    0,
+    1
+  );
+  text-shadow:
+    0.1vw 0vw 0.25vw #f0d6de,
+    0.2vw 0vw 0.25vw #f0d6de,
+    0.4vw 0vw 0.25vw #f0d6de,
+    0.1vw 0vw 0.1vw #f181b2,
+    0.2vw 0vw 0vw #f181b2,
+    0.4vw 0vw 0vw #f181b2,
+    0.1vw 0vw 0.1vw #f181b2,
+    0.2vw 0vw 0.1vw #f181b2,
+    0.4vw 0vw 0vw #f181b2,
+    0.1vw 0vw 1vw #f181b2,
+    0.2vw 0vw 2vw #f181b2,
+    0.4vw 0vw 2vw #f181b2,
+    0.2vw 0vw 5vw #f181b2,
+    0.1vw 0vw 0.5vw #f2860b,
+    0.2vw 0vw 0.5vw #f2860b,
+    0.4vw 0vw 6vw #f2860b,
+    0.1vw 0vw 4vw #f2860b,
+    0.2vw 0vw 20vw #f2860b,
+    0.4vw 0vw 10vw #f2860b,
+    0.1vw 0vw 10vw #f2860b,
+    0.2vw 0vw 30vw #f2860b,
+    0.4vw 0vw 10vw #f2860b;
 }
