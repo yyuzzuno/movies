@@ -6,7 +6,7 @@ export default function middleware(request: NextRequest) {
     const requestHeaders = new Headers();
     requestHeaders.set(
       "Authorization",
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMWE5NDg3ZTlhYzMwZDNjNTE2MWM0ZjVmMTYxYjE1NSIsIm5iZiI6MTc0NzYyMTIzMS41MTksInN1YiI6IjY4MmE5NTZmZTE5Y2FiNTYxMjBiZDYxNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.k6BnDnt30X446mP_Q-3vp7z5YQtW5T4IYk6IuaBnDIk"
+      "" // TODO: 環境変数からトークンを読み込む。APIリードアクセストークンを再生成して古いトークンを無効化済み
     );
     requestHeaders.set("accept", "application/json");
     requestHeaders.set("Host", "api.themoviedb.org");
