@@ -2,25 +2,25 @@ import Image from "next/image";
 
 // TODO: genreRecordについて動的に対応する
 const genreColorRecord: Record<string, string | undefined> = {
-  アクション: "#FF5733",
-  アドベンチャー: "#33FF57",
-  アニメーション: "#3357FF",
-  コメディ: "#FF33A1",
-  犯罪: "#FF8C33",
-  ドキュメンタリー: "#33FFF5",
-  ドラマ: "#FF33D4",
-  ファミリー: "#FF5733",
-  ファンタジー: "#33FF57",
-  履歴: "#3357FF",
-  ホラー: "#FF33A1",
-  音楽: "#FF8C33",
-  謎: "#33FFF5",
-  ロマンス: "#FF33D4",
-  サイエンスフィクション: "#FF5733",
-  テレビ映画: "#33FF57",
-  スリラー: "#3357FF",
-  戦争: "#FF33A1",
-  西洋: "#FF8C33",
+  アクション: "#DD5733",
+  アドベンチャー: "#33DD57",
+  アニメーション: "#3357DD",
+  コメディ: "#DD33A1",
+  犯罪: "#DD8C33",
+  ドキュメンタリー: "#33DDD5",
+  ドラマ: "#DD5733",
+  ファミリー: "#DD5733",
+  ファンタジー: "#33DD57",
+  履歴: "#3357DD",
+  ホラー: "#DD33A1",
+  音楽: "#DD8C33",
+  謎: "#33DDD5",
+  ロマンス: "#DD33D4",
+  サイエンスフィクション: "#33CC57",
+  テレビ映画: "#33DD57",
+  スリラー: "#3357DD",
+  戦争: "#DD33A1",
+  西洋: "#DD8C33",
 };
 
 const defaultGenreColor = "#F1A10D";
@@ -32,12 +32,22 @@ interface MovieProps {
   genres: Array<string>;
 }
 
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // 月は0から始まるので+1
+  const day = date.getDate();
+
+  return { year: `${year}年`, date: `${month}月${day}日` };
+}
+
 export const Summary = ({
   title,
   thumbnail_path,
   release_date,
   genres,
 }: MovieProps) => {
+  const { year, date } = formatDate(release_date);
   return (
     <div className="flex flex-col gap-2 text-[1.2rem] font-normal items-center">
       <Image
@@ -47,8 +57,12 @@ export const Summary = ({
         src={`https://image.tmdb.org/t/p/w500/${thumbnail_path}`}
         className="rounded"
       />
-      <span>{title}</span>
-      <span>{release_date}</span>
+      <span className="max-w-full break-words text-center">{title}</span>
+      <div className="flex flex-col gap-2 text-sm md:text-base md:flex-row items-center">
+        <span>{year}</span>
+        <span className="whitespace-nowrap">{date}</span>
+      </div>
+
       <div className="flex gap-2 flex-wrap mt-2 justify-center">
         {genres.map((genre) => (
           <span
