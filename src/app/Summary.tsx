@@ -44,7 +44,7 @@ export const Summary = ({
         alt={`${title}のサムネイル`}
         width={249}
         height={329}
-        src={`/img${thumbnail_path}`}
+        src={`https://image.tmdb.org/t/p/w500/${thumbnail_path}`}
         className="rounded"
       />
       <span>{title}</span>

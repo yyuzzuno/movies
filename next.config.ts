@@ -1,12 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [new URL("https://image.tmdb.org/**")],
+  },
   async rewrites() {
     return [
-      {
-        source: "/img/:path*",
-        destination: "https://image.tmdb.org/t/p/w500/:path*",
-      },
       {
         source: "/tmdb/movie",
         destination: "https://api.themoviedb.org/3/search/movie",
