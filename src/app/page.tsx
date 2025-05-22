@@ -3,6 +3,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { Summary } from "./Summary";
 import { useFetchMovies } from "./useMovies";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // TODO: APIからジャンルデータを取得してレコードを作成する
 // reference: https://developer.themoviedb.org/reference/genre-movie-list
@@ -33,15 +34,15 @@ interface queryParams {
   year: string;
 }
 
-export default function Home() {
+// Create a client
+const queryClient = new QueryClient();
+
+const Searcher = () => {
   const keyword = useRef<HTMLInputElement>(null);
   const year = useRef<HTMLSelectElement>(null);
   const [params, setParams] = useState<queryParams | null>(null);
-  const [to, setTo] = useState(0);
-
   // useFetchMoviesをキーワード・年で呼び出す
-  const { movies, isLoading, isError } = useFetchMovies({
-    to,
+  const { data, fetchNextPage, hasNextPage, isFetching } = useFetchMovies({
     ...(params ?? { keyword: "", year: "" }),
   });
 
@@ -54,7 +55,6 @@ export default function Home() {
     const yearValue = year.current?.value;
     if (keywordValue === undefined || yearValue === undefined) return;
     setParams({ keyword: keywordValue, year: yearValue });
-    setTo(1);
   }, [setParams]);
 
   return (
@@ -151,53 +151,64 @@ export default function Home() {
         </div>
       )}
       {/* 検索後・0件 */}
-      {!isLoading && movies.length === 0 && (
-        <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
-          該当する映画がありませんでした
-        </div>
-      )}
-      {/* 検索結果 */}
-      {0 < to && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "32px",
-            maxWidth: "1200px",
-            marginBottom: "48px",
-          }}
-        >
-          {movies.map((movie) => (
-            <Summary
-              key={JSON.stringify(movie)}
-              title={movie.title}
-              thumbnail_path={movie.poster_path!}
-              release_date={movie.release_date}
-              genres={movie.genre_ids.map((id) => genreRecord[id])}
-            />
-          ))}
-        </div>
-      )}
-      {movies.length > 0 && (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <button
-            onClick={() => {
-              setTo((prev) => prev + 1);
-            }}
+      {data === undefined ? (
+        !isFetching && (
+          <div style={{ margin: "32px 0", textAlign: "center", color: "#888" }}>
+            該当する映画がありませんでした
+          </div>
+        )
+      ) : (
+        <div>
+          <div
             style={{
-              padding: "20px 0",
-              width: "280px",
-              background: "#f5f7f8",
-              border: "none",
-              borderRadius: "2px",
-              fontSize: "1.1rem",
-              cursor: "pointer",
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "32px",
+              maxWidth: "1200px",
+              marginBottom: "48px",
             }}
           >
-            More Read
-          </button>
+            {data.pages.flat().map((movie) => (
+              <Summary
+                key={JSON.stringify(movie)}
+                title={movie.title}
+                thumbnail_path={movie.poster_path!}
+                release_date={movie.release_date}
+                genres={movie.genre_ids.map((id) => genreRecord[id])}
+              />
+            ))}
+          </div>
+
+          {hasNextPage && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button
+                onClick={() => fetchNextPage()}
+                style={{
+                  padding: "20px 0",
+                  width: "280px",
+                  background: "#f5f7f8",
+                  border: "none",
+                  borderRadius: "2px",
+                  fontSize: "1.1rem",
+                  cursor: "pointer",
+                }}
+              >
+                More Read
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
+  );
+};
+
+export default function Home() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <main>
+        <Searcher />
+      </main>
+    </QueryClientProvider>
   );
 }
