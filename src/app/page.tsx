@@ -68,7 +68,7 @@ const Searcher = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center py-16">
       <h1 className="text-3xl font-normal mb-12">Search Movie App</h1>
-      <div className="flex gap-12 mb-12">
+      <div className="flex flex-col sm:flex-row gap-12 mb-12">
         <div className="flex flex-col w-60">
           <label htmlFor="keyword" className="mb-2 text-base">
             Keyword
@@ -114,7 +114,7 @@ const Searcher = () => {
       {/* 検索後・0件 */}
       {data !== undefined && data.pages[0].length !== 0 ? (
         <div>
-          <div className="grid grid-cols-4 gap-8 max-w-5xl mb-12">
+          <div className="grid grid-cols-4 gap-8 mb-12 w-full">
             {data.pages.flat().map((movie) => (
               <Summary
                 key={JSON.stringify(movie)}
@@ -151,7 +151,7 @@ const Searcher = () => {
 export default function Home() {
   return (
     <QueryClientProvider client={queryClient}>
-      <main>
+      <main className="mx-[32px]">
         <Searcher />
       </main>
     </QueryClientProvider>
