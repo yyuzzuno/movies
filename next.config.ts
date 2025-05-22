@@ -8,8 +8,13 @@ const nextConfig: NextConfig = {
         destination: "https://image.tmdb.org/t/p/w500/:path*",
       },
       {
-        source: "/movie",
+        source: "/tmdb/movie",
         destination: "https://api.themoviedb.org/3/search/movie",
+      },
+      {
+        source: "/tmdb/genre",
+        destination:
+          "https://api.themoviedb.org/3/genre/movie/list?language=ja",
       },
     ];
   },

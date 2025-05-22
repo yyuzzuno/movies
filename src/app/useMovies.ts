@@ -12,7 +12,7 @@ export const useFetchMovies = ({
 }) => {
   const fetchMovies = async ({ pageParam = 1 }: { pageParam?: number }) => {
     const res = await fetch(
-      `/movie?include_adult=false&language=ja-JP&page=${pageParam}&query=${encodeURIComponent(keyword)}&year=${year}`
+      `/tmdb/movie?include_adult=false&language=ja-JP&page=${pageParam}&query=${encodeURIComponent(keyword)}&year=${year}`
     );
     const data: MoviesResponse = await res.json();
     return data.results;
