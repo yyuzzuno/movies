@@ -57,7 +57,7 @@ export const Summary = ({
         src={`https://image.tmdb.org/t/p/w500/${thumbnail_path}`}
         className="rounded"
       />
-      <span className="sign-four max-w-full break-words text-center">
+      <span className="sign-four max-w-full break-words text-center font-bold">
         {title}
       </span>
       <div className="sign-four flex flex-col gap-2 text-sm md:text-base md:flex-row items-center">
