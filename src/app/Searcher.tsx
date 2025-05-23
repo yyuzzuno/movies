@@ -21,7 +21,7 @@ export const Searcher = () => {
     });
 
   // 年プルダウン用
-  const years = ["2020", "2021", "2022", "2023", "2024"];
+  const years = ["", "2020", "2021", "2022", "2023", "2024"];
 
   // 検索ボタン押下時
   const handleSearch = useCallback(() => {
@@ -54,6 +54,11 @@ export const Searcher = () => {
             type="text"
             className="p-3 bg-gray-100 rounded text-base border-none outline-none"
             placeholder="Enter keyword"
+            onFocus={() => {
+              if (year.current !== null) {
+                year.current.value = "";
+              }
+            }}
           />
         </div>
         <div className="flex flex-col w-60">
@@ -63,8 +68,9 @@ export const Searcher = () => {
           <select
             id="year"
             ref={year}
-            defaultValue="2020"
+            defaultValue=""
             className="p-3 bg-gray-100 rounded text-base border-none outline-none"
+            onChange={() => handleSearch()}
           >
             {years.map((y) => (
               <option key={y} value={y}>
@@ -73,12 +79,6 @@ export const Searcher = () => {
             ))}
           </select>
         </div>
-        <button
-          onClick={handleSearch}
-          className="whitespace-nowrap px-6 py-3 text-white rounded text-base h-12 self-end bg-blur-lg border border-white/40 border-r-white/20 border-b-white/20 rounded-md hover:bg-white/10 transition"
-        >
-          検索
-        </button>
       </div>
       {/* 検索前 */}
       {params === null && (
